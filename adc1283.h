@@ -40,21 +40,25 @@ struct ADC1283_Handle_t {
 /* Exported constants --------------------------------------------------------*/
 
 /* Exported variables --------------------------------------------------------*/
+#define ADC1283_MAX_SAMPLE_RATE_KSPS        (200U)
+#define ADC1283_MIN_SAMPLE_RATE_KSPS        (50U)
+#define ADC1283_CONV_HOLD_TIME_SCLK_CYCLES  (13U)
+#define ADC1283_ACQUSITION_TIME_SCLK_CYCLES (3U)
+#define ADC1283_THRGHPT_TIME_SCLK_CYCLES    (_ADC1283_CONV_HOLD_TIME_SCLK_CYCLES + _ADC1283_ACQUSITION_TIME_SCLK_CYCLES)
 
-// Standard operative values
 #ifndef ADC1283_AVCC
 #define ADC1283_AVCC (3.3f)  // 3.3V Analog Voltage Reference in volts
 #endif
 
 #ifndef ADC1283_SPI_TIMOUT_MS
-#define ADC1283_SPI_TIMOUT_MS (50U)
+#define ADC1283_SPI_TIMOUT_MS (50U) // Timeout of a signle conversion (depends on spi bus speed)
+#endif
+
+#ifndef ADC1283_MAX_CONSEQ_CONVERSIONS
+#define ADC1283_MAX_CONSEQ_CONVERSIONS (8U) // Maximum number of conversions for ADC1283_conv_channels and ADC1283_conv_cannels_raw
 #endif
 /* Exported macros -----------------------------------------------------------*/
 /* Exported functions --------------------------------------------------------*/
-/* Private types -------------------------------------------------------------*/
-/* Private variables ---------------------------------------------------------*/
-/* Private constants ---------------------------------------------------------*/
-/* Private Macros -----------------------------------------------------------*/
 
 HAL_StatusTypeDef ADC1283_conv_channel_raw(struct ADC1283_Handle_t *hadc1283,
                                            enum ADC1283_CHNL_t channel,
@@ -63,5 +67,20 @@ HAL_StatusTypeDef ADC1283_conv_channel_raw(struct ADC1283_Handle_t *hadc1283,
 HAL_StatusTypeDef ADC1283_conv_channel(struct ADC1283_Handle_t *hadc1283, 
                                        enum ADC1283_CHNL_t channel, 
                                        float *pConv);
+
+HAL_StatusTypeDef ADC1283_conv_channels_raw(struct ADC1283_Handle_t *hadc1283,
+                                            uint8_t num_channels,
+                                            enum ADC1283_CHNL_t channels[num_channels],
+                                            uint16_t conv_arr[num_channels]);
+
+HAL_StatusTypeDef ADC1283_conv_channels(struct ADC1283_Handle_t *hadc1283,
+                                        uint8_t num_channels,
+                                        enum ADC1283_CHNL_t channels[num_channels],
+                                        float conv_arr[num_channels]);
+
+/* Private types -------------------------------------------------------------*/
+/* Private variables ---------------------------------------------------------*/
+/* Private constants ---------------------------------------------------------*/
+/* Private Macros -----------------------------------------------------------*/
 #endif
 
