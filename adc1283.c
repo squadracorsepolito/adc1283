@@ -120,7 +120,7 @@ void _ADC1283_tx_serialize(uint8_t num_channels,
     assert_param(tx_payload);
 
     for (int i = 0; i < num_channels; i++) {
-        tx_payload[i * 2] = 0U | ((0b111 & channels[i]) << 3U);  // serialize as per datasheet
+        tx_payload[i] = 0U | ((0b111 & channels[i]) << 3U);  // serialize as per datasheet
     }
     // initialize padding
     tx_payload[num_channels] = (0U);

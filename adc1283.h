@@ -7,6 +7,7 @@
  * @date      Mon Jul  3 03:13:44 PM CEST 2023
  *
  * @brief     ST adc1283 comunication interface
+ * @note      CPOL=high, CLKPHA = 2 edge
  *
  * @license Licensed under "THE BEER-WARE LICENSE", Revision 69 (see LICENSE)
  */
@@ -46,6 +47,8 @@ struct ADC1283_Handle_t {
 #define ADC1283_ACQUSITION_TIME_SCLK_CYCLES (3U)
 #define ADC1283_THRGHPT_TIME_SCLK_CYCLES    (_ADC1283_CONV_HOLD_TIME_SCLK_CYCLES + _ADC1283_ACQUSITION_TIME_SCLK_CYCLES)
 
+#define ADC1283_SCLK_MAX_FREQ_HZ (3200000U) //3.2MHz
+
 #ifndef ADC1283_AVCC
 #define ADC1283_AVCC (3.3f)  // 3.3V Analog Voltage Reference in volts
 #endif
@@ -58,6 +61,10 @@ struct ADC1283_Handle_t {
 #define ADC1283_MAX_CONSEQ_CONVERSIONS (8U) // Maximum number of conversions for ADC1283_conv_channels and ADC1283_conv_cannels_raw
 #endif
 /* Exported macros -----------------------------------------------------------*/
+#ifndef assert_param
+#include <assert.h>
+#define assert_param(expr) assert(expr)
+#endif
 /* Exported functions --------------------------------------------------------*/
 
 HAL_StatusTypeDef ADC1283_conv_channel_raw(struct ADC1283_Handle_t *hadc1283,
