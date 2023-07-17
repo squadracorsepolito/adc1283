@@ -65,6 +65,9 @@ struct ADC1283_Handle_t {
 #include <assert.h>
 #define assert_param(expr) assert(expr)
 #endif
+
+#define ADC1283_ADC_RAW_TO_PHYS(_ADC_RAW_VAL_, _ADC_LSB_) (_ADC_RAW_VAL_ * _ADC_LSB_)
+
 /* Exported functions --------------------------------------------------------*/
 
 HAL_StatusTypeDef ADC1283_conv_channel_raw(struct ADC1283_Handle_t *hadc1283,

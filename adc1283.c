@@ -32,7 +32,6 @@
 
 /* Private macro -------------------------------------------------------------*/
 
-#define ADC_RAW_TO_PHYS(_ADC_RAW_VAL_, _ADC_LSB_) (_ADC_RAW_VAL_ * _ADC_LSB_)
 
 /* Private variables ---------------------------------------------------------*/
 
@@ -89,7 +88,7 @@ HAL_StatusTypeDef ADC1283_conv_channels(struct ADC1283_Handle_t *hadc1283,
     if (ret_code != HAL_OK)
         return ret_code;
     for (uint8_t i = 0; i < num_channels; i++) {
-        conv_arr[i] = ADC_RAW_TO_PHYS(conv_raw[i], _ADC1283_LSB);
+        conv_arr[i] = ADC1283_ADC_RAW_TO_PHYS(conv_raw[i], _ADC1283_LSB);
     }
     return HAL_OK;
 }
