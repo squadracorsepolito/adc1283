@@ -63,7 +63,7 @@ HAL_StatusTypeDef ADC1283_conv_channels_raw(struct ADC1283_Handle_t *hadc1283,
     ret_code = HAL_SPI_TransmitReceive(hadc1283->hspi,
                                        (uint8_t *)&tx_rx_buf,
                                        (uint8_t *)&tx_rx_buf,
-                                       sizeof(tx_rx_buf),
+                                       (num_channels+1)*2,
                                        ADC1283_SPI_TIMOUT_MS * num_channels);
 
     _ADC1283_cs_disable(hadc1283->hspi, hadc1283->cs_gpio_port, hadc1283->cs_gpio_pin);
@@ -131,7 +131,7 @@ void _ADC1283_rx_deserialize(uint8_t num_conv, uint16_t rx_payload[num_conv + 1]
     assert_param(conv_data);
 
     for (int i = 0; i < num_conv; i++) {
-        // rx_payload[i+1] because rx_payload[0] will always containt a non
+        // rx_payload[i+1] because rx_payload[0] will always contain a non
         // requested (default) conversion value
         conv_data[i] = (0U | ((rx_payload[i + 1] & 0x0FU) << 8U) | ((rx_payload[i + 1] >> 8U) & 0xFFU));
     }
