@@ -22,11 +22,6 @@
 
 /* Private define ------------------------------------------------------------*/
 
-#define _ADC1283_DYN_RANGE_V (ADC1283_AVCC) /*!< ADC1283 dynamic range in volts */
-#define _ADC1283_RES_STEPS   (4096U)        /*!< ADC1283 Resolution steps (12bit) */
-
-#define _ADC1283_LSB \
-    ((float)_ADC1283_DYN_RANGE_V / _ADC1283_RES_STEPS) /*!< ADC1283 Least significant bit voltage over step */
 
 /* Private types -------------------------------------------------------------*/
 
@@ -39,16 +34,16 @@
 void _ADC1283_cs_enable(SPI_HandleTypeDef *spi, GPIO_TypeDef *port, uint16_t pin);
 void _ADC1283_cs_disable(SPI_HandleTypeDef *spi, GPIO_TypeDef *gpio_port, uint16_t gpio_pin);
 void _ADC1283_tx_serialize(uint8_t num_channels,
-                           enum ADC1283_CHNL_t channels[num_channels],
+                           enum ADC1283_Chnl channels[num_channels],
                            uint16_t tx_payload[num_channels + 1]);
 void _ADC1283_rx_deserialize(uint8_t num_conv, uint16_t rx_payload[num_conv + 1], uint16_t conv_data[num_conv]);
 
 /* Exported variables --------------------------------------------------------*/
 
 /* Exported functions --------------------------------------------------------*/
-HAL_StatusTypeDef ADC1283_conv_channels_raw(struct ADC1283_Handle_t *hadc1283,
+HAL_StatusTypeDef ADC1283_conv_channels_raw(struct ADC1283_Handle *hadc1283,
                                             uint8_t num_channels,
-                                            enum ADC1283_CHNL_t channels[num_channels],
+                                            enum ADC1283_Chnl channels[num_channels],
                                             uint16_t conv_arr[num_channels]) {
     assert_param(num_channels <= ADC1283_MAX_CONSEQ_CONVERSIONS);
 
@@ -64,7 +59,7 @@ HAL_StatusTypeDef ADC1283_conv_channels_raw(struct ADC1283_Handle_t *hadc1283,
                                        (uint8_t *)&tx_rx_buf,
                                        (uint8_t *)&tx_rx_buf,
                                        (num_channels+1)*2,
-                                       ADC1283_SPI_TIMOUT_MS * num_channels);
+                                       ADC1283_SPI_TIMEOUT_mS * num_channels);
 
     _ADC1283_cs_disable(hadc1283->hspi, hadc1283->cs_gpio_port, hadc1283->cs_gpio_pin);
 
@@ -76,9 +71,9 @@ HAL_StatusTypeDef ADC1283_conv_channels_raw(struct ADC1283_Handle_t *hadc1283,
     return HAL_OK;
 }
 
-HAL_StatusTypeDef ADC1283_conv_channels(struct ADC1283_Handle_t *hadc1283,
+HAL_StatusTypeDef ADC1283_conv_channels(struct ADC1283_Handle *hadc1283,
                                         uint8_t num_channels,
-                                        enum ADC1283_CHNL_t channels[num_channels],
+                                        enum ADC1283_Chnl channels[num_channels],
                                         float conv_arr[num_channels]) {
     assert_param(num_channels <= ADC1283_MAX_CONSEQ_CONVERSIONS);
 
@@ -88,16 +83,16 @@ HAL_StatusTypeDef ADC1283_conv_channels(struct ADC1283_Handle_t *hadc1283,
     if (ret_code != HAL_OK)
         return ret_code;
     for (uint8_t i = 0; i < num_channels; i++) {
-        conv_arr[i] = ADC1283_ADC_RAW_TO_PHYS(conv_raw[i], _ADC1283_LSB);
+        conv_arr[i] = ADC1283_ADC_RAW_TO_PHYS(conv_raw[i]);
     }
     return HAL_OK;
 }
-HAL_StatusTypeDef ADC1283_conv_channel_raw(struct ADC1283_Handle_t *hadc1283,
-                                           enum ADC1283_CHNL_t channel,
+HAL_StatusTypeDef ADC1283_conv_channel_raw(struct ADC1283_Handle *hadc1283,
+                                           enum ADC1283_Chnl channel,
                                            uint16_t *pConv) {
     return ADC1283_conv_channels_raw(hadc1283, 1U, &channel, pConv);
 }
-HAL_StatusTypeDef ADC1283_conv_channel(struct ADC1283_Handle_t *hadc1283, enum ADC1283_CHNL_t channel, float *pConv) {
+HAL_StatusTypeDef ADC1283_conv_channel(struct ADC1283_Handle *hadc1283, enum ADC1283_Chnl channel, float *pConv) {
     return ADC1283_conv_channels(hadc1283, 1U, &channel, pConv);
 }
 
@@ -112,7 +107,7 @@ void _ADC1283_cs_disable(SPI_HandleTypeDef *spi, GPIO_TypeDef *gpio_port, uint16
 }
 
 void _ADC1283_tx_serialize(uint8_t num_channels,
-                           enum ADC1283_CHNL_t channels[num_channels],
+                           enum ADC1283_Chnl channels[num_channels],
                            uint16_t tx_payload[num_channels + 1]) {
     assert_param(num_channels > 0);
     assert_param(channels);
