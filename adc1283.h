@@ -56,15 +56,11 @@ struct ADC1283_Handle {
 #define ADC1283_SCLK_MAX_FREQ_HZ (3200000U) /*!< ADC max cloxk frequency 3.2MHz */
 
 #ifndef ADC1283_AVCC_V
-#define ADC1283_AVCC_V \
-    (3.3f) /*!< Analog Voltage Reference in volts
-                                      Default is 3.3V */
+#define ADC1283_AVCC_V (3.3f) /*!< Analog Voltage Reference in volts. Default is 3.3V */
 #endif
 
 #ifndef ADC1283_DYN_RANGE_V
-#define ADC1283_DYN_RANGE_V \
-    (ADC1283_AVCC_V) /*!< Dynamic range of the ADC in volts. 
-                                                  Default = AVCC-0V */
+#define ADC1283_DYN_RANGE_V (ADC1283_AVCC_V) /*!< Dynamic range of the ADC in volts. Default = AVCC-0V */
 #endif
 
 #ifndef ADC1283_SPI_TIMEOUT_mS /*!< Timeout in milliseconds for a signle conversion (depends on spi bus speed) */
@@ -76,8 +72,7 @@ struct ADC1283_Handle {
 #endif
 
 #ifndef ADC1283_MAX_CONSEQ_CONVERSIONS
-#define ADC1283_MAX_CONSEQ_CONVERSIONS \
-    (ADC1283_CHANNELS_NUM) /*!< Maximum number of conversions for ADC1283_conv_channels()
+#define ADC1283_MAX_CONSEQ_CONVERSIONS (ADC1283_CHANNELS_NUM) /*!< Maximum number of conversions for ADC1283_conv_channels()
                                                                    Default: the maximum number of channels of the adc (8)
                                                                    this value can be increased to do more conversions */
 #endif
